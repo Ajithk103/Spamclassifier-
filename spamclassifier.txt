@@ -1,0 +1,36 @@
+mport pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix
+from sklearn.naive_bayes import MultinomialNB
+from wordcloud import WordCloud
+
+
+df = pd.read_csv("spam.csv", encoding = 'ISO-8859-1')
+df.head()
+df = df.drop(columns=df.columns[2:5])
+df.head()
+df.duplicated()
+df.nunique()
+df.columns = ['Category', 'Message']
+df.head()
+
+
+# Count the number of messages in each category
+category_counts = df['Category'].value_counts().reset_index()
+category_counts.columns = ['Category', 'Count']
+
+# Create a bar plot using Seaborn
+plt.figure(figsize=(8, 6))
+sns.barplot(x='Category', y='Count', data=category_counts)
+plt.xlabel('Category')
+plt.ylabel('Count')
+plt.title('Message Category Distribution')
+
+# Add text with counts on the bars
+for i, count in enumerate(category_counts['Count']):
+    plt.text(i, count, str(count), ha='center', va='bottom')
